@@ -1,5 +1,9 @@
 class ExceptionGenerator
 
+  def self.generate_error(exception_class, message)
+    request_error(exception_class, message)
+  end
+
   def self.request_error(exception_class, message)
     begin
       raise_error(exception_class, message)

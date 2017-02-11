@@ -28,6 +28,9 @@ require "format_exception/version"
 #
 module FormatException
 
+  CLASSIC_FORMAT = "%:m%f: %M (%C)\n%R"
+  CLEAN_FORMAT = "%:m%C: %M:\n%B"
+
   ##
   # The contextual clean format
   #
@@ -41,11 +44,7 @@ module FormatException
   # @return [String] the formatted exception
   #
   def self.[](e, context_message = nil)
-    if context_message
-      "#{context_message}: " + clean(e)
-    else
-      clean(e)
-    end
+    format(CLEAN_FORMAT, e, context_message)
   end
 
   ##
@@ -58,10 +57,12 @@ module FormatException
   #
   # @param [Exception] e
   #   the exception to format
+  # @param [String] context_message
+  #   the additional message to prepend to the formatted exception
   # @return [String] the formatted exception
   #
-  def self.classic(e)
-    "#{e.backtrace.first}: #{e.message} (#{e.class})\n\t" + e.backtrace.drop(1).join("\n\t")
+  def self.classic(e, context_message = nil)
+    format(CLASSIC_FORMAT, e, context_message)
   end
 
   ##
@@ -72,10 +73,37 @@ module FormatException
   #
   # @param [Exception] e
   #   the exception to format
+  # @param [String] context_message
+  #   the additional message to prepend to the formatted exception
   # @return [String] the formatted exception
   #
-  def self.clean(e)
-    "#{e.class}: #{e.message}:\n\t" + e.backtrace.join("\n\t")
+  def self.clean(e, context_message = nil)
+    format(CLEAN_FORMAT, e, context_message)
   end
 
+  def self.format(f, e, c = nil)
+    scanner = StringScanner.new(f)
+    formatted = ""
+    loop do
+      formatted << scanner.scan(/[^%]*/)
+      token = scanner.scan(/%:?./)
+      case token
+      when "%C" then formatted << e.class.to_s
+      when "%M" then formatted << e.message
+      when "%m" then formatted << c if c
+      when "%:m" then formatted << "#{c}: " if c
+      when "%f" then formatted << e.backtrace.first
+      when "%r" then formatted << e.backtrace.drop(1).join("\n")
+      when "%R" then formatted << ("\t" + e.backtrace.drop(1).join("\n\t"))
+      when "%b" then formatted << e.backtrace.join("\n")
+      when "%B" then formatted << ("\t" + e.backtrace.join("\n\t"))
+      when "%%" then formatted << "%"
+      when nil then break
+      else
+        raise ArgumentError, "unknown format specifier '#{scanner.matched}'"
+      end
+      break if scanner.eos?
+    end
+    formatted
+  end
 end
