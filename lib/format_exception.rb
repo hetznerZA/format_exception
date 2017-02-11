@@ -6,7 +6,26 @@ require "strscan"
 #
 # Provides utility methods for formatting an exception as a String.
 #
-# @example The contextual clean format
+# @example Classic format
+#
+#   require "format_exception"
+#
+#   def make_mistake
+#     begin
+#       raise "Deliberate mistake"
+#     rescue Exception => ex
+#       $stderr.puts FormatException.classic(ex)
+#     end
+#   end
+#
+#   make_mistake
+#
+#   # Prints:
+#   #
+#   # example.rb:7:in `make_mistake': Deliberate mistake (RuntimeError)
+#   #         example.rb:13:in `<main>'
+#
+# @example Contextual clean format to Logger
 #
 #   require "logger"
 #   require "format_exception"
@@ -16,7 +35,7 @@ require "strscan"
 #     File.open("message.txt", "r") do |io|
 #       puts io.read
 #     end
-#   rescue IOError => ex
+#   rescue StandardError => ex
 #     logger.error(FormatException[ex, "Printing welcome message"])
 #   end
 #
@@ -26,6 +45,25 @@ require "strscan"
 #   #         foo.rb:10:in `initialize'
 #   #         foo.rb:10:in `open'
 #   #         foo.rb:10:in `<main>'
+#
+# @example Contextual custom format
+#
+#   require "format_exception"
+#
+#   def make_mistake
+#     begin
+#       raise "Deliberate mistake"
+#     rescue Exception => ex
+#       $stderr.puts FormatException.format("%:m%C(\"%M\") at %f\n%R", ex, "Testing formatter")
+#     end
+#   end
+#
+#   make_mistake
+#
+#   # Prints
+#   #
+#   # Testing formatter: RuntimeError("Deliberate mistake") at example.rb:7:in `make_mistake'
+#   #         example.rb:13:in `<main>'
 #
 module FormatException
 
