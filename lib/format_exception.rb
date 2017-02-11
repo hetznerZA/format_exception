@@ -28,8 +28,15 @@ require "format_exception/version"
 #
 module FormatException
 
-  CLASSIC_FORMAT = "%f: %:m%M (%C)\n%R" unless defined?(CLASSIC_FORMAT)
-  CLEAN_FORMAT = "%:m%C: %M:\n%B" unless defined?(CLEAN_FORMAT)
+  ##
+  # The classic format (see {classic})
+  #
+  CLASSIC_FORMAT = "%f: %:m%M (%C)\n%R"
+
+  ##
+  # The clean format (see {clean})
+  #
+  CLEAN_FORMAT = "%:m%C: %M:\n%B"
 
   ##
   # Alias for {clean}

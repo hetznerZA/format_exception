@@ -1,8 +1,10 @@
 # FormatException
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/format_exception`. To experiment with that code, run `bin/console` for an interactive prompt.
+A module of utility methods for string formatting exceptions.
 
-TODO: Delete this and the text above, and describe your gem
+## Documentation
+
+For documentation of the released gem, see [rubydoc.info](http://www.rubydoc.info/gems/format_exception).
 
 ## Installation
 
@@ -19,10 +21,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install format_exception
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Development
 

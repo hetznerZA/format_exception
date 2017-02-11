@@ -1,0 +1,10 @@
+= FormatException
+
+Provides utility methods for formatting an exception as a String.
+
+Two very common formats are supported directly, with other formats made possible with a printf-like format specifier.
+The inclusion of a context message is also supported
+
+The methods are provided by the module {FormatException}.
+
+The implementation is covered by an rspec test suite in the {https://github.com/hetznerZA/format_exception FormatException repo}.
