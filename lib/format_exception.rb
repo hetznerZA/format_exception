@@ -1,4 +1,5 @@
 require "format_exception/version"
+require "strscan"
 
 ##
 # Simple exception formatter
