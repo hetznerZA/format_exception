@@ -1,5 +1,7 @@
 RSpec.shared_examples "clean format" do
 
+  let(:context_message) { nil }
+
   it "includes the exception class name on the first line" do
     first_line = formatted.split("\n").first
     expect(first_line).to match(/#{exception_class}: /)
@@ -28,6 +30,16 @@ RSpec.shared_examples "clean format" do
   it "does not indent the first line" do
     first_line = formatted.split("\n").first
     expect(first_line).to_not start_with("\t")
+  end
+
+  context "with a context message" do
+    let(:context_message) { "While testing" }
+
+    it "includes the context message at the beginning of the first line" do
+      first_line = formatted.split("\n").first
+      expect(first_line).to match(/^#{context_message}: /)
+    end
+
   end
 
 end

@@ -13,32 +13,19 @@ describe FormatException do
     let(:exception_message) { "forced error" }
     let(:exception) { ExceptionGenerator.generate_error(exception_class, exception_message) }
 
-    describe "#[ex, context_message]" do
-      context "with a context message" do
-        let(:formatted) { subject[exception, context_message] }
-
-        it "includes the message at the beginning of the first line" do
-          first_line = formatted.split("\n").first
-          expect(first_line).to match(/^#{context_message}: /)
-        end
-
-        include_examples "clean format"
-      end
-
-      context "without a context message" do
-        let(:formatted) { subject[exception] }
-
-        include_examples "clean format"
-      end
-    end
-
-    describe "#clean(ex)" do
-      let(:formatted) { subject.clean(exception) }
+    describe "#[ex, context_message = nil]" do
+      let(:formatted) { subject[exception, context_message] }
 
       include_examples "clean format"
     end
 
-    describe "#classic(ex)" do
+    describe "#clean(ex, context_message = nil)" do
+      let(:formatted) { subject.clean(exception, context_message) }
+
+      include_examples "clean format"
+    end
+
+    describe "#classic(ex, context_message = nil)" do
       let(:formatted) { subject.classic(exception) }
 
       it "includes the exception class name at the end of the first line" do
@@ -69,6 +56,16 @@ describe FormatException do
       it "does not indent the first line" do
         first_line = formatted.split("\n").first
         expect(first_line).to_not start_with("\t")
+      end
+
+      context "with a context message" do
+        let(:context_message) { "While testing" }
+        let(:formatted) { subject.classic(exception, context_message) }
+
+        it "includes the context after the first line of the backtrace on the first line" do
+          first_line = formatted.split("\n").first
+          expect(first_line).to match(/\.rb:\d+:in `\w+': #{context_message}: /)
+        end
       end
     end
 

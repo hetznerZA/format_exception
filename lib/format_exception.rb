@@ -28,23 +28,14 @@ require "format_exception/version"
 #
 module FormatException
 
-  CLASSIC_FORMAT = "%:m%f: %M (%C)\n%R"
-  CLEAN_FORMAT = "%:m%C: %M:\n%B"
+  CLASSIC_FORMAT = "%f: %:m%M (%C)\n%R" unless defined?(CLASSIC_FORMAT)
+  CLEAN_FORMAT = "%:m%C: %M:\n%B" unless defined?(CLEAN_FORMAT)
 
   ##
-  # The contextual clean format
-  #
-  # Format the exception as per {clean}, but with an optional +context_message+
-  # prepended to the first line.
-  #
-  # @param [Exception] e
-  #   the exception to format
-  # @param [String] context_message
-  #   the additional message to prepend to the formatted exception
-  # @return [String] the formatted exception
+  # Alias for {clean}
   #
   def self.[](e, context_message = nil)
-    format(CLEAN_FORMAT, e, context_message)
+    clean(e, context_message)
   end
 
   ##
@@ -52,13 +43,16 @@ module FormatException
   #
   # Formats the exception exactly as the Ruby interpreter would if the exception
   # was uncaught. The first line includes the first line of the backtrace, and the
-  # exception class name and message, with the rest of the backtrace on subsequent,
+  # exception message and class name, with the rest of the backtrace on subsequent,
   # indented lines.
+  #
+  # If the +context_message+ is given, it is included on the first line, between
+  # the first line of the backtrace and the exception message.
   #
   # @param [Exception] e
   #   the exception to format
   # @param [String] context_message
-  #   the additional message to prepend to the formatted exception
+  #   the additional message to include in the formatted exception
   # @return [String] the formatted exception
   #
   def self.classic(e, context_message = nil)
@@ -71,6 +65,8 @@ module FormatException
   # Formats the exception as the Rails logger would, with the exception class name
   # and message on the first line, with the backtrace on subsequent, indented lines.
   #
+  # If the +context_message+ is given, it is prepended to the first line.
+  #
   # @param [Exception] e
   #   the exception to format
   # @param [String] context_message
@@ -81,6 +77,22 @@ module FormatException
     format(CLEAN_FORMAT, e, context_message)
   end
 
+  ##
+  # Format exception as per printf-like format specifier
+  #
+  # The following format specifiers are supported:
+  #
+  # * +%C+  - the exception class name
+  # * +%M+  - the exception message
+  # * +%m+  - the context message if given
+  # * +%:m+ - the context message, a colon and a space, if the context message is given
+  # * +%f+  - the first line of the backtrace, unindented
+  # * +%r+  - all lines of the backtrace but the first, newline-separated, unindented
+  # * +%R+  - all lines of the backtrace but the first, newline-separated, indented
+  # * +%b+  - all lines of the backtrace, newline-separated, unindented
+  # * +%B+  - all lines of the backtrace, newline-separated, indented
+  # * +%%+  - a literal +%+
+  #
   def self.format(f, e, c = nil)
     scanner = StringScanner.new(f)
     formatted = ""
