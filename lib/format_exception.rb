@@ -22,9 +22,9 @@ require "format_exception/version"
 #   # Prints
 #   #
 #   # E, [2017-02-11T01:56:08.763049 #4302] ERROR -- : Printing welcome message: Errno::ENOENT: No such file or directory @ rb_sysopen - message.txt:
-#   #	foo.rb:10:in `initialize'
-#   #	foo.rb:10:in `open'
-#   #	foo.rb:10:in `<main>'
+#   #         foo.rb:10:in `initialize'
+#   #         foo.rb:10:in `open'
+#   #         foo.rb:10:in `<main>'
 #
 module FormatException
 
