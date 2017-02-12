@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/format_exception.svg)](http://badge.fury.io/rb/format_exception) [![Build Status](https://travis-ci.org/hetznerZA/format_exception.svg?branch=master)](https://travis-ci.org/hetznerZA/format_exception) [![Dependency Status](https://gemnasium.com/hetznerZA/format_exception.svg)](https://gemnasium.com/hetznerZA/format_exception)
+
 # FormatException
 
 A module of utility methods for string formatting exceptions.
