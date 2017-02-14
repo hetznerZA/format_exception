@@ -6,7 +6,7 @@ A module of utility methods for string formatting exceptions.
 
 ## Documentation
 
-For documentation of the released gem, see [rubydoc.info](http://www.rubydoc.info/gems/format_exception).
+For documentation, follow the _Documentation_ link of the released gem on [rubygems.org](https://rubygems.org/gems/format_exception).
 
 ## Installation
 
