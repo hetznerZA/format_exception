@@ -65,6 +65,24 @@ require "strscan"
 #   # Testing formatter: RuntimeError("Deliberate mistake") at example.rb:7:in `make_mistake'
 #   #         example.rb:13:in `<main>'
 #
+# @example Data format
+#
+#   require "format_exception"
+#
+#   def make_mistake
+#     begin
+#       raise "Deliberate mistake"
+#     rescue Exception => ex
+#       $stderr.puts FormatException.classic(ex).to_s
+#     end
+#   end
+#
+#   make_mistake
+#
+#   # Prints:
+#   #
+#   # {:name=>"RuntimeError", :message=>"Deliberate mistake", :backtrace=>["(irb):19:in `make_mistake'", ...]}
+#
 module FormatException
 
   ##
@@ -124,6 +142,31 @@ module FormatException
   end
 
   ##
+  # Format exception as symbol-keyed dictionary
+  #
+  # If the +context_message+ is given, it is included as the +:context_message+ key.
+  #
+  # @param [Exception] e
+  #   the exception to format
+  # @param [String] context_message
+  #   the additional message to include in the dictionary
+  # @return [Hash] the data representation of the exception
+  #   * +:name+ (String) exception class name
+  #   * +:message+ (String) exception message
+  #   * +:backtrace+ (Array) exception backtrace
+  #   * +:context_message+ (String) +context_message+ if specified
+  #
+  def self.data(e, context_message = nil)
+    {
+      name: e.class.to_s,
+      message: e.message,
+      backtrace: e.backtrace,
+    }.tap { |h|
+      h[:context_message] = context_message if context_message
+    }
+  end
+
+  ##
   # Format exception as per printf-like format specifier
   #
   # The following format specifiers are supported:
@@ -164,4 +207,5 @@ module FormatException
     end
     formatted
   end
+
 end

@@ -133,6 +133,33 @@ describe FormatException do
 
     end
 
+    describe "#format(format, ex, context_message = nil)" do
+
+      let(:formatted) { subject.data(exception) }
+
+      it "includes the exception class name as the :name key" do
+        expect(formatted[:name]).to eql(exception_class.to_s)
+      end
+
+      it "includes the exception message as the :message key" do
+        expect(formatted[:message]).to eql(exception_message)
+      end
+
+      it "includes the backtrace as the :backtrace key" do
+        expect(formatted[:backtrace]).to eql(exception.backtrace)
+      end
+
+      context "with a context message" do
+        let(:context_message) { "While testing" }
+        let(:formatted) { subject.data(exception, context_message) }
+
+        it "includes the context message as the :context_message key" do
+          expect(formatted[:context_message]).to eql(context_message)
+        end
+      end
+
+    end
+
   end
 
 end
